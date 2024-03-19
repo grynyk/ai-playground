@@ -1,25 +1,24 @@
 import axios, { AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
-import { Task } from '../models';
+import { PlatformApiData } from '../models';
 import { isNil } from 'lodash';
 import { logError } from '../helpers';
 dotenv.config();
 
-const AI_DEVS_URL: string | undefined = process.env.AI_DEVS_TASKS_URL;
+const PLATFORM_URL: string | undefined = process.env.PLATFORM_URL;
 
 class TaskController {
 
-  public async getDescription(name: string): Promise<Task> {
+  public async getDescription(name: string): Promise<PlatformApiData> {
     try {
       if (isNil(name)) {
         throw new Error('task name was not provided');
       }
-      const tokenResponse: AxiosResponse<Task> = await this.getToken(name);
-      const token = tokenResponse?.data.token;
+      const token: string = await this.getToken(name);
       if (isNil(token)) {
         throw new Error('task token was not provided');
       }
-      const descriptionResponse: AxiosResponse = await axios.get(`${AI_DEVS_URL}/task/${token}`);
+      const descriptionResponse: AxiosResponse<PlatformApiData> = await axios.get(`${PLATFORM_URL}/task/${token}`);
       console.log(`\tTASK DESCRIPTION:`, descriptionResponse?.data.msg);
       return {...descriptionResponse?.data, token };
     } catch (error) {
@@ -33,7 +32,7 @@ class TaskController {
       if (isNil(token) || isNil(answer)) {
         throw new Error('task token or answer was not provided');
       }
-      const response: AxiosResponse = await axios.post(`${AI_DEVS_URL}/answer/${token}`, {
+      const response: AxiosResponse<PlatformApiData> = await axios.post(`${PLATFORM_URL}/answer/${token}`, {
         answer,
       });
       console.log(`\nSubmit status:`, response?.data.note);
@@ -44,16 +43,16 @@ class TaskController {
     }
   }
 
-  private async getToken(name: string): Promise<AxiosResponse<Task>> {
+  private async getToken(name: string): Promise<string> {
     try {
       if (isNil(name)) {
         throw new Error('task name was not provided');
       }
-      const response: AxiosResponse = await axios.post(`${AI_DEVS_URL}/token/${name}`, {
-        apikey: process.env.AI_DEVS_API_KEY,
+      const response: AxiosResponse<PlatformApiData> = await axios.post(`${PLATFORM_URL}/token/${name}`, {
+        apikey: process.env.PLATFORM_API_TOKEN,
       });
       console.log(`\tTASK TOKEN:`, response?.data.token);
-      return response;
+      return response?.data.token;
     } catch (error) {
       logError(error);
       throw(error);
