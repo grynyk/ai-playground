@@ -1,17 +1,17 @@
 import express, { Express } from 'express';
-import TaskController from './controllers/task.controller';
 import dotenv from 'dotenv';
+import PlatformController from './controllers/platform.controller';
 dotenv.config();
 
 // const OPENAI_API_TOKEN = process.env.OPENAI_API_TOKEN;
 
 class Server {
   private app: Express;
-  private taskController: TaskController;
+  private platformController: PlatformController;
 
   constructor() {
     this.app = express();
-    this.taskController = new TaskController();
+    this.platformController = new PlatformController();
   }
 
   private onInit(): void {
