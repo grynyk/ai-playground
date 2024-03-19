@@ -1,4 +1,4 @@
-export interface Task {
+export interface PlatformApiData {
     code: number;
     cookie?: string;
     token: string;
