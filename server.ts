@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import TaskController from './controllers/task.controller';
 import dotenv from 'dotenv';
+import { Task } from './models';
 dotenv.config();
 
 // const OPENAI_API_TOKEN = process.env.OPENAI_API_TOKEN;
@@ -14,10 +15,21 @@ class Server {
     this.taskController = new TaskController();
   }
 
+  /**
+   * First Task: 'helloapi'
+   **/
+  async helloApi(): Promise<void> {
+    const taskDescResponse: Task = await this.taskController.getDescription('helloapi');
+    const { cookie } = taskDescResponse;
+    const { token } = taskDescResponse;
+    await this.taskController.sendAnswer(token, cookie);
+  }
+
   private onInit(): void {
     /**
      * Executes method on initialization.
      **/
+    this.helloApi();
   }
 
   public start: (PORT: number) => Promise<unknown> = (PORT: number) => {
