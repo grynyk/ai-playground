@@ -7,9 +7,9 @@ dotenv.config();
 
 const PLATFORM_URL: string | undefined = process.env.PLATFORM_URL;
 
-class TaskController {
+class PlatformController {
 
-  public async getDescription(name: string): Promise<PlatformApiData> {
+  public async getTaskData(name: string): Promise<PlatformApiData> {
     try {
       if (isNil(name)) {
         throw new Error('task name was not provided');
@@ -18,9 +18,9 @@ class TaskController {
       if (isNil(token)) {
         throw new Error('task token was not provided');
       }
-      const descriptionResponse: AxiosResponse<PlatformApiData> = await axios.get(`${PLATFORM_URL}/task/${token}`);
-      console.log(`\tTASK DESCRIPTION:`, descriptionResponse?.data.msg);
-      return {...descriptionResponse?.data, token };
+      const response: AxiosResponse<PlatformApiData> = await axios.get(`${PLATFORM_URL}/task/${token}`);
+      console.log(`\tTASK DESCRIPTION:`, response?.data.msg);
+      return {...response?.data, token };
     } catch (error) {
       logError(error);
       throw(error);
@@ -60,4 +60,4 @@ class TaskController {
   }
 }
 
-export default TaskController;
+export default PlatformController;

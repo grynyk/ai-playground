@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
-import TaskController from './controllers/task.controller';
 import dotenv from 'dotenv';
+import PlatformController from './controllers/platform.controller';
 import { PlatformApiData } from './models';
 dotenv.config();
 
@@ -8,21 +8,21 @@ dotenv.config();
 
 class Server {
   private app: Express;
-  private taskController: TaskController;
+  private platformController: PlatformController;
 
   constructor() {
     this.app = express();
-    this.taskController = new TaskController();
+    this.platformController = new PlatformController();
   }
 
   /**
    * First Task: 'helloapi'
    **/
   async helloApi(): Promise<void> {
-    const taskDescResponse: PlatformApiData = await this.taskController.getDescription('helloapi');
-    const { cookie } = taskDescResponse;
-    const { token } = taskDescResponse;
-    await this.taskController.sendAnswer(token, cookie);
+    const taskData: PlatformApiData = await this.platformController.getTaskData('helloapi');
+    const { cookie } = taskData;
+    const { token } = taskData;
+    await this.platformController.sendAnswer(token, cookie);
   }
 
   private onInit(): void {
