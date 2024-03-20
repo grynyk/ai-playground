@@ -2,7 +2,6 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { PlatformApiData } from '../models';
 import { isNil } from 'lodash';
-import { logError } from '../helpers';
 dotenv.config();
 
 const PLATFORM_URL: string | undefined = process.env.PLATFORM_URL;
@@ -30,7 +29,6 @@ class PlatformController {
       console.log(`\tTASK DESCRIPTION:`, response?.data.msg);
       return {...response?.data, token };
     } catch (error) {
-      logError(error);
       throw(error);
     }
   }
@@ -46,7 +44,6 @@ class PlatformController {
       console.log(`\nSubmit status:`, response?.data.note);
       console.log('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
     } catch (error) {
-      logError(error);
       throw(error);
     }
   }
@@ -62,7 +59,6 @@ class PlatformController {
       console.log(`\tTASK TOKEN:`, response?.data.token);
       return response?.data.token;
     } catch (error) {
-      logError(error);
       throw(error);
     }
   }

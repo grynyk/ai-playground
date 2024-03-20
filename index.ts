@@ -1,4 +1,3 @@
-import { logError } from './helpers';
 import Server from './server';
 
 const PORT: number = parseInt(process.env.PORT || '4200');
@@ -10,7 +9,7 @@ const starter: Promise<void> = server
     console.log(`Server is running on http://localhost:${PORT}\n`);
   })
   .catch((error: Object): void => {
-    logError(error);
+    throw(error);
   });
 
 export default starter;
