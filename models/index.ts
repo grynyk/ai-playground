@@ -1,1 +1,1 @@
-export * from './api.model';
+export * from './platform.model';
