@@ -1,1 +1,1 @@
-export * from './task.controller';
+export { default as PlatformController } from './platform.controller';
