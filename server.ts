@@ -1,9 +1,8 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
-import PlatformController from './controllers/platform.controller';
-dotenv.config();
+import { PlatformController } from './controllers';
 
-// const OPENAI_API_TOKEN = process.env.OPENAI_API_TOKEN;
+dotenv.config();
 
 class Server {
   private app: Express;
