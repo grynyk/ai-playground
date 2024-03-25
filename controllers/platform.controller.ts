@@ -27,13 +27,14 @@ class PlatformController {
       }
       const response: AxiosResponse<PlatformApiData> = await this.client.get(`/task/${token}`);
       console.log(`\tTASK DESCRIPTION:`, response?.data.msg);
+      console.log(`\n`, response?.data);
       return {...response?.data, token };
     } catch (error) {
       throw(error);
     }
   }
 
-  public async sendAnswer(token: string, answer: string | undefined): Promise<void> {
+  public async sendAnswer(token: string, answer: unknown | undefined): Promise<void> {
     try {
       if (isNil(token) || isNil(answer)) {
         throw new Error('task token or answer was not provided');
