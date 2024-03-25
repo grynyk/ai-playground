@@ -1,9 +1,9 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import { OpenAiController, PlatformController } from './controllers';
-import { ChatCompletion, ChatCompletionSystemMessageParam, ChatCompletionUserMessageParam } from 'openai/resources';
-import { CHAT_ROLE } from './models';
+import { ChatCompletion } from 'openai/resources';
 import { isNil } from 'lodash';
+import { HumanMessage, SystemMessage } from './models';
 
 dotenv.config();
 
@@ -19,21 +19,17 @@ class Server {
   }
 
   private async liarTask(): Promise<void> {
-    const { token } = await this.platformController.getTaskData('liar');
+    await this.platformController.getTaskData('liar');
     const question = 'what is the highest building of Ukraine?';
-    const answer = await this.platformController.sendTaskQuestion(token, 'liar', question);
-    const user: ChatCompletionUserMessageParam = { role: CHAT_ROLE.USER, content: question };
-    const system: ChatCompletionSystemMessageParam = {
-      role: CHAT_ROLE.SYSTEM,
-      content: `Return strictly YES or NO if the answer: "${answer}" was the accurate response for the question in prompt`,
-    };
+    const answer = await this.platformController.sendTaskQuestion('liar', question);
+    const user: HumanMessage = new HumanMessage(question);
+    const system: SystemMessage = new SystemMessage(`Return strictly YES or NO if the answer: "${answer}" was the accurate response for the question in prompt`);
     const response: ChatCompletion = await this.openAIController.getChatCompletion([user, system]);
     const choice: ChatCompletion.Choice | undefined = response.choices.find((choice) => !isNil(choice));
     if (isNil(choice) || isNil(choice?.message?.content)) {
       return;
     }
-    const result: string = choice.message.content;
-    await this.platformController.sendAnswer(token, result);
+    await this.platformController.sendAnswer(choice.message.content);
   }
 
   private onInit(): void {
