@@ -1,6 +1,13 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-import { ChatCompletion, ChatCompletionCreateParamsNonStreaming, ChatCompletionMessageParam, ModerationCreateParams, ModerationCreateResponse } from 'openai/resources';
+import {
+  ChatCompletion,
+  ChatCompletionCreateParamsNonStreaming,
+  ChatCompletionMessageParam,
+  ModerationCreateParams,
+  ModerationCreateResponse,
+} from 'openai/resources';
+import { MODEL_COMPLETION, MODEL_MODERATION } from '../models';
 dotenv.config();
 
 const OPENAI_API_TOKEN: string | undefined = process.env.OPENAI_API_TOKEN;
@@ -13,11 +20,14 @@ class OpenAiController {
     });
   }
 
-  public async getModerationForInput(input: string | string[]): Promise<ModerationCreateResponse> {
+  public async getModerationForInput(
+    input: string | string[],
+    model: MODEL_MODERATION = 'text-moderation-latest'
+  ): Promise<ModerationCreateResponse> {
     try {
       const payload: ModerationCreateParams = {
         input,
-        model: 'text-moderation-latest',
+        model,
       };
       return await this.client.moderations.create(payload);
     } catch (error) {
@@ -25,13 +35,13 @@ class OpenAiController {
     }
   }
 
-  public async getChatCompletion(messages: ChatCompletionMessageParam[]): Promise<ChatCompletion> {
+  public async getChatCompletion(messages: ChatCompletionMessageParam[], model: MODEL_COMPLETION = 'gpt-3.5-turbo'): Promise<ChatCompletion> {
     try {
       const payload: ChatCompletionCreateParamsNonStreaming = {
         messages,
-        model: 'gpt-3.5-turbo',
+        model,
       };
-      return await this.client.chat.completions.create(payload)
+      return await this.client.chat.completions.create(payload);
     } catch (error) {
       throw error;
     }
