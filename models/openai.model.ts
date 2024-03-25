@@ -1,9 +1,3 @@
-export enum ROLE {
-  SYSTEM = 'system',
-  USER = 'user',
-  ASSISTANT = 'assistant',
-}
-
 export type MODEL_MODERATION = 'text-moderation-latest' | 'text-moderation-stable';
 
 export type MODEL_COMPLETION =
