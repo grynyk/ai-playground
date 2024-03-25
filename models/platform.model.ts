@@ -1,7 +1,7 @@
 export interface PlatformApiData {
     code: number;
+    token?: string;
     cookie?: string;
-    token: string;
     msg?: string;
     note?: string;
     input?: string[];

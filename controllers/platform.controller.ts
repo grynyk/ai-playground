@@ -8,21 +8,22 @@ const PLATFORM_URL: string | undefined = process.env.PLATFORM_URL;
 
 class PlatformController {
   private client: AxiosInstance;
-  private _token: string | null;
+  private _token: string | undefined;
+
+  get token(): string | undefined {
+    return this._token;
+  }
+
+  set token(_token: string | undefined) {
+    this._token = _token;
+  }
+
   constructor() {
     this.client = axios.create({
       baseURL: PLATFORM_URL,
       timeout: 20000,
     });
-    this._token = null;
-  }
-
-  get token(): string | null {
-    return this._token;
-  }
-
-  set token(_token: string | null) {
-    this._token = _token;
+    this._token = undefined;
   }
 
   public async getTaskData(name: string): Promise<PlatformApiData> {
@@ -35,15 +36,14 @@ class PlatformController {
         throw new Error('task token was not provided');
       }
       const response: AxiosResponse<PlatformApiData> = await this.client.get(`/task/${this.token}`);
-      console.log(`\tTASK DESCRIPTION:`, response?.data.msg);
-      console.log(`\n`, response?.data);
-      return {...response?.data, token: this.token };
+      console.log(`\tTASK DESCRIPTION:`, response?.data);
+      return { ...response?.data, token: this.token };
     } catch (error) {
       throw error;
     }
   }
 
-  public async sendTaskQuestion( name: string, question: string): Promise<string> {
+  public async sendTaskQuestion(name: string, question: string): Promise<string | undefined> {
     try {
       if (isNil(name) || isNil(this.token)) {
         throw new Error('task name or token was not provided');
@@ -59,8 +59,7 @@ class PlatformController {
           },
         }
       );
-      console.log(`\tTASK ANSWER:`, response?.data.answer!);
-      return response?.data.answer!;
+      return response?.data.answer;
     } catch (error) {
       throw error;
     }
