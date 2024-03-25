@@ -30,7 +30,30 @@ class PlatformController {
       console.log(`\n`, response?.data);
       return {...response?.data, token };
     } catch (error) {
-      throw(error);
+      throw error;
+    }
+  }
+
+  public async sendTaskQuestion(token: string, name: string, question: string): Promise<string> {
+    try {
+      if (isNil(name) || isNil(token)) {
+        throw new Error('task name or token was not provided');
+      }
+      const response: AxiosResponse<PlatformApiData> = await this.client.post(
+        `/task/${token}`,
+        {
+          question,
+        },
+        {
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log(`\tTASK ANSWER:`, response?.data.answer!);
+      return response?.data.answer!;
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -45,7 +68,7 @@ class PlatformController {
       console.log(`\nSubmit status:`, response?.data.note);
       console.log('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
     } catch (error) {
-      throw(error);
+      throw error;
     }
   }
 
@@ -60,7 +83,7 @@ class PlatformController {
       console.log(`\tTASK TOKEN:`, response?.data.token);
       return response?.data.token;
     } catch (error) {
-      throw(error);
+      throw error;
     }
   }
 }
