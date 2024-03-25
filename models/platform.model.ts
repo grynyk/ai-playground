@@ -4,5 +4,6 @@ export interface PlatformApiData {
     token: string;
     msg?: string;
     note?: string;
-    input?: string[] | string;
+    input?: string[];
+    blog?: string[];
 }
