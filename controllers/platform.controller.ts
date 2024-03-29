@@ -37,7 +37,7 @@ class PlatformController {
       }
       const response: AxiosResponse<PlatformApiData> = await this.client.get(`/task/${this.token}`);
       console.log(`\tTASK DESCRIPTION:`, response?.data);
-      return { ...response?.data, token: this.token };
+      return response?.data;
     } catch (error) {
       throw error;
     }
