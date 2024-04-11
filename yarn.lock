@@ -94,6 +94,17 @@
     zod "^3.22.4"
     zod-to-json-schema "^3.22.3"
 
+"@langchain/openai@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@langchain/openai/-/openai-0.0.25.tgz#8332abea1e3acb9b1169f90636e518c0ee90622e"
+  integrity sha512-cD9xPDDXK2Cjs6yYg27BpdzBnQZvBb1yaNgMoGLWIT27UQVRyT96PLC1OVMQOmMmHaKDBCj/1bW4GQQgX7+d2Q==
+  dependencies:
+    "@langchain/core" "~0.1.45"
+    js-tiktoken "^1.0.7"
+    openai "^4.26.0"
+    zod "^3.22.4"
+    zod-to-json-schema "^3.22.3"
+
 "@langchain/openai@~0.0.19":
   version "0.0.23"
   resolved "https://registry.yarnpkg.com/@langchain/openai/-/openai-0.0.23.tgz#4c7ee7f26436eee97b98c09926d19c27193115df"
@@ -310,7 +321,7 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
-axios@^1.6.8:
+axios@^1.4.0, axios@^1.6.8:
   version "1.6.8"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.8.tgz#66d294951f5d988a00e87a0ffb955316a619ea66"
   integrity sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==
@@ -1238,6 +1249,14 @@ side-channel@^1.0.4:
     es-errors "^1.3.0"
     get-intrinsic "^1.2.4"
     object-inspect "^1.13.1"
+
+sonix-speech-recognition@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/sonix-speech-recognition/-/sonix-speech-recognition-2.1.1.tgz#0950d1b9f64272945590b05a8f50bcf42c4fd4ea"
+  integrity sha512-SZVVMpoEGCHCEcvu5jRk4W7WfFWDuQMeaMSpZhI7g53Z3r8Lq7Y/xFRnnpOx2jDag4BqDlhbNgYuDoOer0TojQ==
+  dependencies:
+    axios "^1.4.0"
+    form-data "^4.0.0"
 
 sprintf-js@~1.0.2:
   version "1.0.3"

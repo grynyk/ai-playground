@@ -1,8 +1,7 @@
 import express, { Express } from 'express';
-import dotenv from 'dotenv';
 import { OpenAiController, PlatformController } from './controllers';
-
-dotenv.config();
+import { ChatMessage, MessageContent } from 'langchain/schema';
+import { Transcription } from 'openai/resources/audio/transcriptions';
 
 class Server {
   private app: Express;
@@ -15,12 +14,19 @@ class Server {
     this.openAIController = new OpenAiController();
   }
 
+  private async taskWhisper(): Promise<void> {
+    const taskData = await this.platformController.getTaskData('whisper');
+    const audioLink: MessageContent = await this.openAIController.getChatContent([new ChatMessage(`get link from following text, just link without anything else: ${taskData.msg!}`, 'user')]);
+    const result: Transcription = await this.openAIController.getAudioTranscription(audioLink as string);
+    this.platformController.sendAnswer(result.text);
+  }
+
   private onInit(): void {
     /**
      * Executes method on initialization.
      **/
+    this.taskWhisper();
   }
-
   public start: (PORT: number) => Promise<unknown> = (PORT: number) => {
     return new Promise((resolve, reject): void => {
       this.app

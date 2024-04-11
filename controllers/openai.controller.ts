@@ -1,47 +1,60 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-import {
-  ChatCompletion,
-  ChatCompletionCreateParamsNonStreaming,
-  ChatCompletionMessageParam,
-  ModerationCreateParams,
-  ModerationCreateResponse,
-} from 'openai/resources';
-import { MODEL_COMPLETION, MODEL_MODERATION } from '../models';
+import { Moderation } from 'openai/resources';
+import { OpenAIModerationChain } from 'langchain/chains';
+import { ChatOpenAI, ChatOpenAICallOptions, OpenAIEmbeddings } from '@langchain/openai';
+import { ChatMessage, MessageContent } from 'langchain/schema';
+import { Transcription } from 'openai/resources/audio/transcriptions';
 dotenv.config();
-
-const OPENAI_API_TOKEN: string | undefined = process.env.OPENAI_API_TOKEN;
+const OPENAI_API_KEY: string | undefined = process.env.OPENAI_API_KEY;
 
 class OpenAiController {
-  private client: OpenAI;
+  private openAI: OpenAI;
+  private chat: ChatOpenAI<ChatOpenAICallOptions>;
+  private moderation: OpenAIModerationChain;
+  private embedding: OpenAIEmbeddings;
+
   constructor() {
-    this.client = new OpenAI({
-      apiKey: OPENAI_API_TOKEN,
+    this.openAI = new OpenAI({
+      apiKey: OPENAI_API_KEY,
     });
+    this.chat = new ChatOpenAI();
+    this.moderation = new OpenAIModerationChain();
+    this.embedding = new OpenAIEmbeddings();
   }
 
-  public async getModerationForInput(
-    input: string | string[],
-    model: MODEL_MODERATION = 'text-moderation-latest'
-  ): Promise<ModerationCreateResponse> {
+  public async getModeration(input: string | string[]): Promise<Moderation[]> {
     try {
-      const payload: ModerationCreateParams = {
+      const { results } = await this.moderation.invoke({
         input,
-        model,
-      };
-      return await this.client.moderations.create(payload);
+      });
+      return results;
     } catch (error) {
       throw error;
     }
   }
 
-  public async getChatCompletion(messages: ChatCompletionMessageParam[], model: MODEL_COMPLETION = 'gpt-3.5-turbo'): Promise<ChatCompletion> {
+  public async getAudioTranscription(filePath: string): Promise<Transcription> {
+    const file: Response = await fetch(filePath);
+    const transcription: Transcription = await this.openAI.audio.transcriptions.create({
+      file,
+      model: 'whisper-1'
+    });
+    return transcription;
+  }
+
+  public async getChatContent(messages: ChatMessage[]): Promise<MessageContent> {
     try {
-      const payload: ChatCompletionCreateParamsNonStreaming = {
-        messages,
-        model,
-      };
-      return await this.client.chat.completions.create(payload);
+      const { content } = await this.chat.invoke([...messages]);
+      return content;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getEmbedding(input: string): Promise<number[]> {
+    try {
+      return await this.embedding.embedQuery(input);
     } catch (error) {
       throw error;
     }
