@@ -14,18 +14,39 @@ class Server {
     this.openAIController = new OpenAiController();
   }
 
-  private async taskWhisper(): Promise<void> {
-    const taskData = await this.platformController.getTaskData('whisper');
-    const audioLink: MessageContent = await this.openAIController.getChatContent([new ChatMessage(`get link from following text, just link without anything else: ${taskData.msg!}`, 'user')]);
-    const result: Transcription = await this.openAIController.getAudioTranscription(audioLink as string);
-    this.platformController.sendAnswer(result.text);
+  private async taskFunctions(): Promise<void> {
+    const taskData = await this.platformController.getTaskData('functions');
+    console.log(taskData);
+    const addUserFunctionSchema = {
+      name: 'addUser',
+      description: 'add new user',
+      parameters: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            description: 'first name',
+          },
+          surname: {
+            type: 'string',
+            description: 'last name',
+          },
+          year: {
+            type: 'integer',
+            description: 'year of birth',
+          },
+        },
+      },
+      required: ['name', 'surname', 'year'],
+    };
+    this.platformController.sendAnswer(addUserFunctionSchema);
   }
 
   private onInit(): void {
     /**
      * Executes method on initialization.
      **/
-    this.taskWhisper();
+    this.taskFunctions();
   }
   public start: (PORT: number) => Promise<unknown> = (PORT: number) => {
     return new Promise((resolve, reject): void => {
