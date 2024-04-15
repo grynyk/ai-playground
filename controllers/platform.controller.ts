@@ -31,7 +31,7 @@ class PlatformController {
       if (isNil(name)) {
         throw new Error('task name was not provided');
       }
-      await this.fetchToken(name);
+      await this.setToken(name);
       if (isNil(this.token)) {
         throw new Error('task token was not provided');
       }
@@ -80,7 +80,7 @@ class PlatformController {
     }
   }
 
-  private async fetchToken(name: string): Promise<void> {
+  private async setToken(name: string): Promise<void> {
     try {
       if (isNil(name)) {
         throw new Error('task name was not provided');

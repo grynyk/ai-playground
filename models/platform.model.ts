@@ -8,6 +8,7 @@ export interface PlatformApiData {
     blog?: string[];
     question?: string;
     answer?: string;
+    hint?: string;
     hint1?: string;
     hint2?: string;
     hint3?: string;

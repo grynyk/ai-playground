@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { Moderation } from 'openai/resources';
 import { OpenAIModerationChain } from 'langchain/chains';
 import { ChatOpenAI, ChatOpenAICallOptions, OpenAIEmbeddings } from '@langchain/openai';
-import { ChatMessage, HumanMessage, MessageContent, SystemMessage } from 'langchain/schema';
+import { HumanMessage, MessageContent, SystemMessage } from 'langchain/schema';
 import { Transcription } from 'openai/resources/audio/transcriptions';
 dotenv.config();
 const OPENAI_API_KEY: string | undefined = process.env.OPENAI_API_KEY;
