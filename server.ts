@@ -37,7 +37,6 @@ class Server {
         }
       } catch(e: unknown) {
         isKnownPersonName = false;
-        continue;
       }
     } while (!isKnownPersonName);
   }
