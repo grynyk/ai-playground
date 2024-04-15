@@ -13,3 +13,15 @@ export interface PlatformApiData {
     hint2?: string;
     hint3?: string;
 }
+
+interface PlatformApiResponseData {
+    code: number;
+    msg: string;
+    note: string;
+}
+
+export interface PlatformApiResponse extends PlatformApiResponseData {
+    response: {
+        data: PlatformApiResponseData;
+    }
+}

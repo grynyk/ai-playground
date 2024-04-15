@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
-import { PlatformApiData } from '../models';
+import { PlatformApiData, PlatformApiResponse } from '../models';
 import { isNil } from 'lodash';
 dotenv.config();
 
@@ -65,18 +65,19 @@ class PlatformController {
     }
   }
 
-  public async sendAnswer(answer: unknown | undefined): Promise<void> {
+  public async sendAnswer(answer: unknown | undefined): Promise<AxiosResponse<PlatformApiResponse>> {
     try {
       if (isNil(this.token) || isNil(answer)) {
         throw new Error('task token or answer was not provided');
       }
-      const response: AxiosResponse<PlatformApiData> = await this.client.post(`/answer/${this.token}`, {
+      const response: AxiosResponse<PlatformApiResponse> = await this.client.post(`/answer/${this.token}`, {
         answer,
       });
       console.log(`\nSubmit status:`, response?.data.note);
       console.log('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
+      return response;
     } catch (error) {
-      throw error;
+      throw(error);
     }
   }
 
