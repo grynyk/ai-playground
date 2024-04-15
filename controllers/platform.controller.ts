@@ -26,7 +26,7 @@ class PlatformController {
     this._token = undefined;
   }
 
-  public async getTaskData(name: string): Promise<PlatformApiData> {
+  public async getTaskData <T extends PlatformApiData>(name: string): Promise<T> {
     try {
       if (isNil(name)) {
         throw new Error('task name was not provided');
@@ -35,7 +35,7 @@ class PlatformController {
       if (isNil(this.token)) {
         throw new Error('task token was not provided');
       }
-      const response: AxiosResponse<PlatformApiData> = await this.client.get(`/task/${this.token}`);
+      const response: AxiosResponse<T> = await this.client.get(`/task/${this.token}`);
       console.log(`\tTASK DESCRIPTION:`, response?.data);
       return response?.data;
     } catch (error) {

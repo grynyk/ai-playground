@@ -1,11 +1,12 @@
 export interface PlatformApiData {
-    code: number;
+    code?: number;
     token?: string;
     cookie?: string;
     msg?: string;
     note?: string;
-    input?: string[];
+    input?: string | string[];
     blog?: string[];
+    question?: string;
     answer?: string;
     hint1?: string;
     hint2?: string;

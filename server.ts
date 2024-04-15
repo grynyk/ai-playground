@@ -1,8 +1,9 @@
 import express, { Express } from 'express';
 import { OpenAiController, PlatformController } from './controllers';
-import { ChatMessage, HumanMessage, MessageContent, SystemMessage } from 'langchain/schema';
-import { Transcription } from 'openai/resources/audio/transcriptions';
+import { HumanMessage, MessageContent, SystemMessage } from 'langchain/schema';
 import { PlatformApiData } from './models';
+import { getPageContent } from './helpers';
+import { isNil } from 'lodash';
 
 class Server {
   private app: Express;
