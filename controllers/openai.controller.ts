@@ -20,7 +20,7 @@ class OpenAiController {
     });
     this.chat = new ChatOpenAI();
     this.moderation = new OpenAIModerationChain();
-    this.embeddings = new OpenAIEmbeddings();
+    this.embeddings = new OpenAIEmbeddings({ maxConcurrency: 5 });
   }
 
   public async getModeration(input: string | string[]): Promise<unknown[]> {

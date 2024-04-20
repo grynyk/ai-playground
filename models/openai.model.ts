@@ -28,6 +28,6 @@ export type MODEL_COMPLETION =
     source: string;
 }
 
-export interface UnknownData {
-  [key: string]: unknown;
+export interface UnknownData<T = unknown> {
+  [key: string]: T;
 }

@@ -31,11 +31,12 @@ class QdrantController {
     return await this.qdrant.getCollection(collectionName);
   }
 
-  async upsert(collectionName: string, data: BasicCollectionData[]): Promise<void> {
-    const collectionPoints: CollectionPoint[] = await this.generateCollectionPoints(collectionName, data);
+  async upsert(collectionName: string, documents: Document<Record<string, unknown>>[]): Promise<void> {
+    const collectionPoints: CollectionPoint[] = await this.generateCollectionPoints(documents);
+    console.log(collectionPoints)
     const ids: string[] = collectionPoints.map((point: CollectionPoint): string => point.id);
     const vectors: number[][] = collectionPoints.map((point: CollectionPoint): number[] => point.vector!);
-    const payloads: UnknownData[] = collectionPoints.map((point: CollectionPoint) => point.payload);
+    const payloads: UnknownData[] = collectionPoints.map((point: CollectionPoint): UnknownData => point.payload);
     await this.qdrant.upsert(collectionName, {
       wait: true,
       batch: {
@@ -64,26 +65,12 @@ class QdrantController {
     return result as unknown as CollectionSearchResult[];
   }
 
-  private async generateCollectionPoints(collectionName: string, data: BasicCollectionData[]): Promise<CollectionPoint[]> {
+  private async generateCollectionPoints(documents: Document<Record<string, unknown>>[]): Promise<CollectionPoint[]> {
     const collectionPoints: CollectionPoint[] = [];
-    const documents: Document<DocumentData>[] = data.map(
-      ({ info, date, title, url }: BasicCollectionData): Document<DocumentData> =>
-        new Document({
-          pageContent: info,
-          metadata: {
-            date,
-            title,
-            url,
-            id: uuidv4(),
-            content: info,
-            source: collectionName,
-          },
-        })
-    );
     for (const document of documents) {
       const [embedding]: number[][] = await this.openAIController.getEmbeddedDocument(document);
       collectionPoints.push({
-        id: document.metadata.id,
+        id: document.metadata.id as string,
         payload: document.metadata,
         vector: embedding,
       });
