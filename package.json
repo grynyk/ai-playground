@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@langchain/openai": "^0.0.25",
+    "@qdrant/qdrant-js": "^1.8.2",
+    "@types/": "qdrant/qdrant-js",
     "@types/express": "^4.17.21",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.28",

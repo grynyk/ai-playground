@@ -6,6 +6,7 @@ export interface PlatformApiData {
     note?: string;
     input?: string | string[];
     blog?: string[];
+    data?: string;
     question?: string;
     answer?: string;
     hint?: string;

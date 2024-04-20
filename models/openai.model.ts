@@ -18,3 +18,16 @@ export type MODEL_COMPLETION =
   | 'gpt-3.5-turbo-1106'
   | 'gpt-3.5-turbo-0125'
   | 'gpt-3.5-turbo-16k-0613';
+
+  export interface DocumentData {
+    date: string;
+    title: string;
+    url: string;
+    id: string;
+    content: string;
+    source: string;
+}
+
+export interface UnknownData {
+  [key: string]: unknown;
+}

@@ -1,10 +1,10 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
-import { Moderation } from 'openai/resources';
 import { OpenAIModerationChain } from 'langchain/chains';
 import { ChatOpenAI, ChatOpenAICallOptions, OpenAIEmbeddings } from '@langchain/openai';
 import { HumanMessage, MessageContent, SystemMessage } from 'langchain/schema';
 import { Transcription } from 'openai/resources/audio/transcriptions';
+import { Document } from 'langchain/document';
 dotenv.config();
 const OPENAI_API_KEY: string | undefined = process.env.OPENAI_API_KEY;
 
@@ -12,7 +12,7 @@ class OpenAiController {
   private openAI: OpenAI;
   private chat: ChatOpenAI<ChatOpenAICallOptions>;
   private moderation: OpenAIModerationChain;
-  private embedding: OpenAIEmbeddings;
+  private embeddings: OpenAIEmbeddings;
 
   constructor() {
     this.openAI = new OpenAI({
@@ -20,10 +20,10 @@ class OpenAiController {
     });
     this.chat = new ChatOpenAI();
     this.moderation = new OpenAIModerationChain();
-    this.embedding = new OpenAIEmbeddings();
+    this.embeddings = new OpenAIEmbeddings();
   }
 
-  public async getModeration(input: string | string[]): Promise<Moderation[]> {
+  public async getModeration(input: string | string[]): Promise<unknown[]> {
     try {
       const { results } = await this.moderation.invoke({
         input,
@@ -52,9 +52,19 @@ class OpenAiController {
     }
   }
 
-  public async getEmbedding(input: string): Promise<number[]> {
+  public async getEmbeddedQuery(input: string): Promise<number[]> {
     try {
-      return await this.embedding.embedQuery(input);
+      return await this.embeddings.embedQuery(input);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getEmbeddedDocument(document: Document): Promise<number[][]> {
+    try {
+      return await this.embeddings.embedDocuments([
+        document.pageContent,
+      ]);
     } catch (error) {
       throw error;
     }
