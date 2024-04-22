@@ -5,6 +5,10 @@ import { ChatOpenAI, ChatOpenAICallOptions, OpenAIEmbeddings } from '@langchain/
 import { HumanMessage, MessageContent, SystemMessage } from 'langchain/schema';
 import { Transcription } from 'openai/resources/audio/transcriptions';
 import { Document } from 'langchain/document';
+import { MODEL_COMPLETION } from '../models/openai.model';
+import { ChatCompletionCreateParamsBase, ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import { first } from 'lodash';
+
 dotenv.config();
 const OPENAI_API_KEY: string | undefined = process.env.OPENAI_API_KEY;
 
@@ -38,7 +42,7 @@ class OpenAiController {
     const file: Response = await fetch(filePath);
     const transcription: Transcription = await this.openAI.audio.transcriptions.create({
       file,
-      model: 'whisper-1'
+      model: 'whisper-1',
     });
     return transcription;
   }
@@ -47,6 +51,25 @@ class OpenAiController {
     try {
       const { content } = await this.chat.invoke([...messages]);
       return content;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getChatFunctionCallingContent(
+    functions: ChatCompletionCreateParamsBase['tools'],
+    chatCompletionMessages?: ChatCompletionMessageParam[],
+    model?: MODEL_COMPLETION,
+  ): Promise<OpenAI.Chat.Completions.ChatCompletion.Choice> {
+    try {
+      const { choices }: OpenAI.Chat.Completions.ChatCompletion = await this.openAI.chat.completions.create({
+        messages: [
+          ...(chatCompletionMessages || []),
+        ],
+        tools: functions,
+        model: model || 'gpt-3.5-turbo-0125',
+      });
+      return first(choices)!;
     } catch (error) {
       throw error;
     }
@@ -62,9 +85,7 @@ class OpenAiController {
 
   public async getEmbeddedDocument(document: Document): Promise<number[][]> {
     try {
-      return await this.embeddings.embedDocuments([
-        document.pageContent,
-      ]);
+      return await this.embeddings.embedDocuments([document.pageContent]);
     } catch (error) {
       throw error;
     }
