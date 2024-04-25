@@ -44,6 +44,7 @@ class OpenAiController {
       file,
       model: 'whisper-1',
     });
+
     return transcription;
   }
 
@@ -59,13 +60,11 @@ class OpenAiController {
   public async getChatFunctionCallingContent(
     functions: ChatCompletionCreateParamsBase['tools'],
     chatCompletionMessages?: ChatCompletionMessageParam[],
-    model?: MODEL_COMPLETION,
+    model?: MODEL_COMPLETION
   ): Promise<OpenAI.Chat.Completions.ChatCompletion.Choice> {
     try {
       const { choices }: OpenAI.Chat.Completions.ChatCompletion = await this.openAI.chat.completions.create({
-        messages: [
-          ...(chatCompletionMessages || []),
-        ],
+        messages: [...(chatCompletionMessages || [])],
         tools: functions,
         model: model || 'gpt-3.5-turbo-0125',
       });
@@ -89,6 +88,27 @@ class OpenAiController {
     } catch (error) {
       throw error;
     }
+  }
+
+  public async getImageChatCompletion(text: string, url: string): Promise<OpenAI.Chat.Completions.ChatCompletion> {  
+    const completion: OpenAI.Chat.Completions.ChatCompletion = await this.openAI.chat.completions.create({
+      model: 'gpt-4-turbo',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text },
+            {
+              type: 'image_url',
+              image_url: {
+                url,
+              },
+            },
+          ],
+        },
+      ],
+    });
+    return completion;
   }
 }
 
