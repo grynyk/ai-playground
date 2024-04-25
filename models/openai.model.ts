@@ -28,6 +28,14 @@ export type MODEL_COMPLETION =
     source: string;
 }
 
+export enum FinishReason {
+  STOP = 'stop',
+  LENGTH = 'length',
+  TOOL_CALLS = 'tool_calls',
+  CONTENT_FILTER = 'content_filter',
+  FUNCTION_CALL = 'function_call',
+}
+
 export interface UnknownData {
   [key: string]: unknown;
 }
