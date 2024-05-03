@@ -1,6 +1,8 @@
 import express, { Express } from 'express';
 import { OpenAiController, PlatformController } from './controllers';
 import QdrantController from './controllers/qdrant.controller';
+import { PlatformApiData } from './models';
+import { ChatCompletion } from 'openai/resources/chat/completions';
 
 class Server {
   private app: Express;
@@ -15,10 +17,19 @@ class Server {
     this.qdrantController = new QdrantController();
   }
 
+  private async taskGnome(): Promise<void> {
+    const { msg, url }: PlatformApiData = await this.platformController.getTaskData<{ msg: string; url: string }>('gnome');
+    const { choices }: ChatCompletion = await this.openAIController.getImageChatCompletion(msg, url);
+    const { message } = choices[0];
+    const result: string | null = message.content;
+    await this.platformController.sendAnswer(result);
+  }
+
   private onInit(): void {
     /**
      * Executes method on initialization.
      **/
+    this.taskGnome();
   }
 
   public start: (PORT: number) => Promise<unknown> = (PORT: number) => {

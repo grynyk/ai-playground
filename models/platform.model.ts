@@ -9,6 +9,7 @@ export interface PlatformApiData {
     data?: string;
     question?: string;
     answer?: string;
+    url?: string;
     hint?: string;
     hint1?: string;
     hint2?: string;
