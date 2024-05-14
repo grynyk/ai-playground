@@ -13,6 +13,7 @@ export interface PlatformApiData {
     hint1?: string;
     hint2?: string;
     hint3?: string;
+    database?: string;
 }
 
 interface PlatformApiResponseData {
